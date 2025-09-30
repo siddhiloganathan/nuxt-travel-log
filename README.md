@@ -29,7 +29,8 @@ pnpm build
 
 Locally preview production build:
 
-```bash
+```bas
+h
 # pnpm
 pnpm preview
 ```
