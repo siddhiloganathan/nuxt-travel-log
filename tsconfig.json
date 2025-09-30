@@ -1,4 +1,7 @@
 {
+  "compilerOptions": {
+    "types": ["@pinia/nuxt", "@nuxt/types", "./.nuxt/imports.d.ts"]
+  },
   "references": [
     {
       "path": "./.nuxt/tsconfig.app.json"
