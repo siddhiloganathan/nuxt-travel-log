@@ -12,7 +12,7 @@ await authStore.init();
 <template>
   <div class="flex flex-col min-h-screen">
     <app-nav-bar />
-    <main>
+    <main class="flex-1 flex flex-col">
       <slot />
     </main>
   </div>
