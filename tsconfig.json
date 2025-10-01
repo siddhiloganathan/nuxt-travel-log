@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
-    "types": ["@pinia/nuxt", "@nuxt/types", "./.nuxt/imports.d.ts"]
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "types": ["@types/node"]
   },
   "references": [
     {
