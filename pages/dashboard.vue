@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
-
 const isSidebarOpen = ref(true);
 
 onMounted(() => {
@@ -21,12 +19,29 @@ function toggleSidebar() {
         <Icon v-else name="tabler:chevron-right" size="42" />
       </div>
       <div class="flex flex-col gap-2">
-        <SidebarButton :show-label="isSidebarOpen" label="Locations" icon="tabler:map" href="/dashboard" />
-        <SidebarButton :show-label="isSidebarOpen" label="Add Locations" icon="tabler:circle-plus-filled" href="/dashboard/add" />
+        <SidebarButton
+          :show-label="isSidebarOpen"
+          label="Locations"
+          icon="tabler:map"
+          href="/dashboard"
+        />
+        <SidebarButton
+          :show-label="isSidebarOpen"
+          label="Add Locations"
+          icon="tabler:circle-plus-filled"
+          href="/dashboard/add"
+        />
         <div class="divider" />
-        <SidebarButton :show-label="isSidebarOpen" label="Sign Out" icon="tabler:logout-2" href="/sign-out" />
+        <SidebarButton
+          :show-label="isSidebarOpen"
+          label="Sign Out"
+          icon="tabler:logout-2"
+          href="/sign-out"
+        />
       </div>
     </div>
-    <div class="flex-1" />
+    <div class="flex-1">
+      <NuxtPage />
+    </div>
   </div>
 </template>

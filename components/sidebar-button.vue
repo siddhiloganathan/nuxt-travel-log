@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { useRoute } from "vue-router";
-
 const props = defineProps<{
   label: string;
   icon: string;
