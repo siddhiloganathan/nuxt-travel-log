@@ -3,7 +3,7 @@
     "target": "ES2022",
     "module": "ESNext",
     "moduleResolution": "Node",
-    "types": ["@types/node"]
+    "types": ["@types/node", "@nuxt/types", "nuxt"]
   },
   "references": [
     {
