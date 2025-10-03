@@ -26,11 +26,25 @@ export default defineEventHandler(async (event) => {
     }));
   }
 
-  const [created] = await db.insert(location).values({
-    ...result.data,
-    slug: result.data.name.replaceAll(" ", "-").toLowerCase(),
-    userId: event.context.user.id,
-  }).returning();
-
-  return created;
+  try {
+    const [created] = await db.insert(location).values({
+      ...result.data,
+      slug: result.data.name.replaceAll(" ", "-").toLowerCase(),
+      userId: event.context.user.id,
+    }).returning();
+    return created;
+  }
+  catch (error) {
+    console.error(error);
+    throw error;
+  //   if (e instanceof LibsqlError) {
+  //     if (e.code === "SQLITE_CONSTRAINT" && e.message.includes("location.slug")) {
+  //       return sendError(event, createError({
+  //         statusCode: 409,
+  //         statusMessage: "Slug must be unique (the location name is used to generate the slug).",
+  //       }));
+  //     }
+  //   }
+  //   throw e;
+  }
 });
