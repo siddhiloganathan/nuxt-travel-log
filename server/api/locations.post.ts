@@ -1,11 +1,8 @@
-import { and, eq } from "drizzle-orm";
-import { customAlphabet } from "nanoid";
 import slugify from "slugify";
 
-import db from "@/lib/db";
-import { InsertLocation, location } from "@/lib/db/schema";
+import { InsertLocation } from "@/lib/db/schema";
 
-const nanoid = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyz", 5);
+import { findLocationByName, findUniqueSlug, insertLocation } from "../../lib/db/queries/location";
 
 export default defineEventHandler(async (event) => {
   if (!event.context.user) {
@@ -19,8 +16,8 @@ export default defineEventHandler(async (event) => {
   const result = await readValidatedBody(event, InsertLocation.safeParse);
 
   if (!result.success) {
-    const statusMessage = result.error.issues.map(issue => `${issue.path.join("")}: ${issue.message}`).join("; ");
-    const data = result.error.issues.reduce((errors, issue) => {
+    const statusMessage = result.error.issues.map((issue: { path: any[]; message: any }) => `${issue.path.join("")}: ${issue.message}`).join("; ");
+    const data = result.error.issues.reduce((errors: { [x: string]: any }, issue: { path: any[]; message: any }) => {
       errors[issue.path.join("")] = issue.message;
       return errors;
     }, {} as Record<string, string>);
@@ -32,13 +29,7 @@ export default defineEventHandler(async (event) => {
     }));
   }
 
-  const existingLocation = await db.query.location.findFirst({
-    where:
-    and(
-      eq(location.name, result.data.name),
-      eq(location.userId, event.context.user.id),
-    ),
-  });
+  const existingLocation = await findLocationByName(result.data, event.context.user.id);
 
   if (existingLocation) {
     return sendError(event, createError({
@@ -46,29 +37,10 @@ export default defineEventHandler(async (event) => {
       statusMessage: "A location with that name already exists",
     }));
   }
-
-  let slug = slugify(result.data.name);
-  let existing = !!(await db.query.location.findFirst({
-    where: eq(location.slug, slug),
-  }));
-  while (existing) {
-    const id = nanoid();
-    const idSlug = `${slug}-${id}`;
-    existing = !!(await db.query.location.findFirst({
-      where: eq(location.slug, idSlug),
-    }));
-    if (!existing) {
-      slug = idSlug;
-    }
-  }
+  const slug = await findUniqueSlug(slugify(result.data.name));
 
   try {
-    const [created] = await db.insert(location).values({
-      ...result.data,
-      slug,
-      userId: event.context.user.id,
-    }).returning();
-    return created;
+    return insertLocation(result.data, slug, event.context.user.id);
   }
   catch (error: any) {
     if (error.cause?.message?.includes("UNIQUE constraint failed: location.slug")) {
