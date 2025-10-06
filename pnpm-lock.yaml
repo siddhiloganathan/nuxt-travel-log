@@ -11,6 +11,9 @@ importers:
       '@antfu/ni':
         specifier: ^26.0.1
         version: 26.0.1
+      '@indoorequal/vue-maplibre-gl':
+        specifier: ^8.4.2
+        version: 8.4.2(maplibre-gl@5.8.0)(vue@3.5.22(typescript@5.9.2))
       '@libsql/client':
         specifier: ^0.15.15
         version: 0.15.15
